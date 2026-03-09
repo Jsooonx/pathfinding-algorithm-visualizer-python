@@ -18,16 +18,6 @@ maze = [
 start = (0, 0)
 end = (6, 6)
 
-algorithm = "astar" # dfs, bfs, astar
-
-# Run selected solver
-if algorithm == "dfs":
-    visit_order, path = dfs(maze, start, end)
-elif algorithm == "bfs":
-    visit_order, path = bfs(maze, start, end)
-else:
-    visit_order, path = astar(maze, start, end)
-
 # Initialized pygame
 pygame.init()
 
@@ -38,13 +28,19 @@ CELL_SIZE = 60
 ROWS = len(maze)
 COLS = len(maze[0])
 
+INFO_HEIGHT = 100
+
 # Window dimensions
 WIDTH = COLS * CELL_SIZE
-HEIGHT = ROWS * CELL_SIZE
+HEIGHT = ROWS * CELL_SIZE + INFO_HEIGHT
 
 # Create window
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption(f"Maze Visualizer - {algorithm.upper()}")
+pygame.display.set_caption("Pathfinding Algorithm Visualizer")
+
+# Fonts
+font = pygame.font.SysFont(None, 32)
+small_font = pygame.font.SysFont(None, 24)
 
 WHITE = (255, 255, 255)
 BLACK = (30, 30, 30)
@@ -56,9 +52,38 @@ GREEN = (80, 200, 120)
 
 # Clock controls animation speed
 clock = pygame.time.Clock()
+
+# List of algo
+algorithms = ["dfs", "bfs", "astar"]
+
+current_algorithm_index = 0
+
+# Animation state
+visit_order = []
+path = []
 step_index = 0
 show_path = False
+pause_counter = 0
 
+PAUSE_FRAMES = 30
+
+# Run selected solver
+def run_solver():
+    global visit_order, path, step_index, show_path
+    
+    algorithm = algorithms[current_algorithm_index]
+    
+    if algorithm == "dfs":
+        visit_order, path = dfs(maze, start, end)
+    elif algorithm == "bfs":
+        visit_order, path = bfs(maze, start, end)
+    else:
+        visit_order, path = astar(maze, start, end)
+        
+    # Reset animation
+    step_index = 0
+    show_path = False
+    
 # Draw maze grid
 def draw_grid():
     for row in range(ROWS):
@@ -107,9 +132,37 @@ def draw_start_end():
     # Goal node
     pygame.draw.rect(screen, PURPLE, (ec * CELL_SIZE, er * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
+# Draw current algorightm info
+def draw_info():
+    algorithm = algorithms[current_algorithm_index]
+    
+    info_y = ROWS * CELL_SIZE + 10
+    
+    # Current algorithm label
+    title_text = font.render(f"Algorithm: {algorithm.upper()}", True, BLACK)
+    
+    # Comparison stats
+    nodes_text = small_font.render(f"Nodes explored: {len(visit_order)}", True, BLACK)
+    path_text = small_font.render(f"Path length: {len(path)}", True, BLACK)
+    
+    screen.blit(title_text, (10, info_y))
+    screen.bilt(nodes_text, (10, info_y + 35))
+    screen.blit(path_text, (220, info_y + 35))
+    
+# Move to next algorithm
+def next_algorithm():
+    global current_algorithm_index, pause_counter
+    
+    current_algorithm_index = (current_algorithm_index + 1) % len(algorithms)
+    pause_counter = 0
+    run_solver()
+    
 # Main program loop
 def main():
-    global step_index, show_path
+    global step_index, show_path, pause_counter
+    
+    # Run first algorithm
+    run_solver()
     
     while True:
         # Handle window events
@@ -123,6 +176,12 @@ def main():
             step_index += 1
         else:
             show_path = True
+            
+            # Pause for a moment
+            if pause_counter < PAUSE_FRAMES:
+                pause_counter += 1
+            else:
+                next_algorithm()
         
         # Draw everything
         screen.fill(WHITE)
