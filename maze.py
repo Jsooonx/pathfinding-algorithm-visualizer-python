@@ -28,7 +28,7 @@ CELL_SIZE = 60
 ROWS = len(maze)
 COLS = len(maze[0])
 
-INFO_HEIGHT = 100
+INFO_HEIGHT = 170
 
 # Window dimensions
 WIDTH = COLS * CELL_SIZE
@@ -66,6 +66,29 @@ show_path = False
 pause_counter = 0
 
 PAUSE_FRAMES = 30
+
+def get_all_results():
+    results = {}
+    
+    for algorithm in algorithms:
+        if algorithm == "dfs":
+            current_visit_order, current_path = dfs(maze, start, end)
+        elif algorithm == "bfs":
+            current_visit_order, current_path = bfs(maze, start, end)
+        else:
+            current_visit_order, current_path = astar(maze, start, end)
+            
+        results[algorithm] = {
+            "visit_order": current_visit_order,
+            "path": current_path,
+            "nodes_explored": len(current_visit_order),
+            "path_length": len(current_path)
+        }
+    
+    return results
+
+# Sotre comparison results
+results = get_all_results()
 
 # Run selected solver
 def run_solver():
@@ -146,9 +169,34 @@ def draw_info():
     path_text = small_font.render(f"Path length: {len(path)}", True, BLACK)
     
     screen.blit(title_text, (10, info_y))
-    screen.bilt(nodes_text, (10, info_y + 35))
+    screen.blit(nodes_text, (10, info_y + 35))
     screen.blit(path_text, (220, info_y + 35))
     
+# Draw comparison summary
+def draw_summary():
+    summary_y = ROWS * CELL_SIZE + 80
+    
+    # Summary title
+    summary_title = small_font.render("Comparison Summary", True, BLACK)
+    screen.blit(summary_title, (10, summary_y))
+    
+    # DFS summary
+    dfs_text = small_font.render(
+        f"DFS - Nodes: {results['dfs']['nodes_explored']} Path length: {results['dfs']['path_length']}", True, BLACK
+    )
+    
+    # BFS summary
+    bfs_text = small_font.render(
+        f"BFS  - Nodes: {results['bfs']['nodes_explored']}  Path length: {results['bfs']['path_length']}", True, BLACK
+    )
+    screen.blit(bfs_text, (10, summary_y + 55))
+
+    # A* summary
+    astar_text = small_font.render(
+        f"A*   - Nodes: {results['astar']['nodes_explored']}  Path length: {results['astar']['path_length']}", True, BLACK
+    )
+    screen.blit(astar_text, (10, summary_y + 80))
+
 # Move to next algorithm
 def next_algorithm():
     global current_algorithm_index, pause_counter
@@ -192,6 +240,9 @@ def main():
             draw_path()
             
         draw_start_end()
+        draw_info()
+        draw_summary()
+        
         pygame.display.flip()
         # Animation speed
         clock.tick(8)
