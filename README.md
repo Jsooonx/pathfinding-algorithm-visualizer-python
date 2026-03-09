@@ -1,4 +1,4 @@
-# Maze Pathfinding Algorithm Visualizer
+# Pathfinding Algorithm Visualizer
 
 A Python project that visualizes and compares pathfinding algorithms on grid-based mazes using Pygame.
 
