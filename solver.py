@@ -8,10 +8,10 @@ def get_neighbors(position, maze):
     
     # Possible movement directions: up, down, left, right
     directions = [
-        (-1, 0),
+        (0, 1),
         (1, 0),
         (0, -1),
-        (0, 1)
+        (-1, 0)
     ]
     
     rows = len(maze)
