@@ -49,5 +49,9 @@ maze = [
 start = (0,0)  
 end = (3,3)
 ```
+
+## Output
+![Maze Visualizer Demo](assets/demo.png)
+
 ## Purpose
 This project demonstrates basic graph traversal and heuristic search while providing a simple visual comparison between DFS, BFS, and A*.
