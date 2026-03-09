@@ -17,7 +17,7 @@ A Python project that visualizes and compares pathfinding algorithms on grid-bas
 - **A\*** = uses a heuristic (Manhattan distance) to guide the search toward the goal
 
 ## Project Structure
-maze-pathfinding-visualizer/
+pathfinding-algorithm-visualizer/
 - main.py = visualization and animation
 - solver.py = DFS, BFS, and A* implementations
 - input.py = maze configuration (maze, start, end)
