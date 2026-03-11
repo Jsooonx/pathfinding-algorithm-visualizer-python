@@ -51,7 +51,7 @@ end = (3,3)
 ```
 
 ## Output
-<img src="assets/Demo1.png" width="700">
+<img src="assets/pathfindingdemo.gif" width="700">
 
 ## Purpose
 This project demonstrates basic graph traversal and heuristic search while providing a simple visual comparison between DFS, BFS, and A*.
