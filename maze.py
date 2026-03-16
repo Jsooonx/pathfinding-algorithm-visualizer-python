@@ -63,8 +63,8 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pathfinding Algorithm Visualizer")
 
 # Fonts
-font = pygame.font.SysFont(None, 32)
-small_font = pygame.font.SysFont(None, 24)
+font = pygame.font.Font("assets/PlayfairDisplay-Regular.ttf", 26)
+small_font = pygame.font.Font("assets/PlayfairDisplay-Regular.ttf", 18)
 
 # Clock controls animation speed
 clock = pygame.time.Clock()
@@ -204,7 +204,7 @@ def draw_summary():
 
         # Highlight the algorithm currently being animated
         if name == current_algorithm:
-            highlight_rect = pygame.Rect(8, y - 2, 300, 22)
+            highlight_rect = pygame.Rect(8, y + 2, 300, 22)
             pygame.draw.rect(screen, YELLOW, highlight_rect, border_radius=6)
 
         row_text = small_font.render(text, True, BLACK)
